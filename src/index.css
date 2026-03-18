@@ -99,3 +99,22 @@
     font-family: 'Playfair Display', serif;
   }
 }
+
+@layer utilities {
+  @keyframes rain {
+    0% { transform: translateY(-10px); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(80px); opacity: 0; }
+  }
+  @keyframes snow {
+    0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(70px) rotate(360deg); opacity: 0; }
+  }
+  .animate-rain {
+    animation: rain 0.8s linear infinite;
+  }
+  .animate-snow {
+    animation: snow 2.5s ease-in-out infinite;
+  }
+}
