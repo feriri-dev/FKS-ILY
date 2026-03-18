@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from "date-fns";
-import { Heart, Clock, MapPin, CalendarHeart, ChevronUp, ExternalLink, Gift, Tv, ListChecks } from "lucide-react";
+import { differenceInDays } from "date-fns";
+import { Heart, Clock, MapPin, CalendarHeart, ChevronUp, Gift, Tv, ListChecks, Thermometer, Wind } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useWeather, getCondition, getConditionLabel } from "@/hooks/use-weather";
+import { WeatherScene } from "@/components/WeatherScene";
 
-const MET_DATE = new Date(2024, 2, 19); // March 19, 2024
-const DATING_DATE = new Date(2025, 8, 2); // September 2, 2025
-
-// Placeholder — update when you know the next visit date
+const MET_DATE = new Date(2024, 2, 19);
+const DATING_DATE = new Date(2025, 8, 2);
 const NEXT_MEETING: Date | null = null;
 
 const PARIS_TZ = "Europe/Paris";
@@ -16,7 +16,7 @@ const TASHKENT_TZ = "Asia/Tashkent";
 
 const utilities = [
   { label: "Teleparty", url: "https://www.teleparty.com/", icon: Tv },
-  { label: "Wishlist / Date Ideas", url: "#", icon: Gift },
+  { label: "Wishlist / Dates", url: "#", icon: Gift },
   { label: "Shared To-Do", url: "#", icon: ListChecks },
 ];
 
@@ -64,13 +64,16 @@ function CountdownDisplay({ target, now }: { target: Date; now: Date }) {
 const Index = () => {
   const now = useNow();
   const [toolbarOpen, setToolbarOpen] = useState(false);
+  const { paris, tashkent } = useWeather();
 
   const daysSinceMet = differenceInDays(now, MET_DATE);
   const daysSinceDating = differenceInDays(now, DATING_DATE);
 
+  const parisCondition = paris ? getCondition(paris.weatherCode, paris.isDay) : null;
+  const tashkentCondition = tashkent ? getCondition(tashkent.weatherCode, tashkent.isDay) : null;
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10 relative overflow-hidden">
-      {/* Subtle decorative blobs */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-accent/30 blur-3xl" />
@@ -107,32 +110,44 @@ const Index = () => {
           </Card>
         </div>
 
-        {/* Local times */}
-        <Card className="bg-card/60 backdrop-blur border-border/50">
-          <CardContent className="p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary/70" />
-                <span className="text-sm font-medium">Paris</span>
-              </div>
-              <div className="text-right">
-                <p className="text-lg font-mono font-semibold tabular-nums">{formatTime(now, PARIS_TZ)}</p>
-                <p className="text-xs text-muted-foreground">{formatDate(now, PARIS_TZ)}</p>
-              </div>
-            </div>
-            <div className="border-t border-border/50" />
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary/70" />
-                <span className="text-sm font-medium">Tashkent</span>
-              </div>
-              <div className="text-right">
-                <p className="text-lg font-mono font-semibold tabular-nums">{formatTime(now, TASHKENT_TZ)}</p>
-                <p className="text-xs text-muted-foreground">{formatDate(now, TASHKENT_TZ)}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Local times + weather */}
+        <div className="grid grid-cols-1 gap-4">
+          {/* Paris */}
+          {parisCondition ? (
+            <WeatherScene condition={parisCondition}>
+              <CityCard
+                city="Paris"
+                tz={PARIS_TZ}
+                now={now}
+                temp={paris!.temperature}
+                wind={paris!.windSpeed}
+                conditionLabel={getConditionLabel(parisCondition)}
+              />
+            </WeatherScene>
+          ) : (
+            <Card className="bg-card/60 backdrop-blur border-border/50">
+              <CityCard city="Paris" tz={PARIS_TZ} now={now} />
+            </Card>
+          )}
+
+          {/* Tashkent */}
+          {tashkentCondition ? (
+            <WeatherScene condition={tashkentCondition}>
+              <CityCard
+                city="Tashkent"
+                tz={TASHKENT_TZ}
+                now={now}
+                temp={tashkent!.temperature}
+                wind={tashkent!.windSpeed}
+                conditionLabel={getConditionLabel(tashkentCondition)}
+              />
+            </WeatherScene>
+          ) : (
+            <Card className="bg-card/60 backdrop-blur border-border/50">
+              <CityCard city="Tashkent" tz={TASHKENT_TZ} now={now} />
+            </Card>
+          )}
+        </div>
 
         {/* Countdown */}
         <Card className="bg-card/60 backdrop-blur border-border/50">
@@ -191,5 +206,51 @@ const Index = () => {
     </div>
   );
 };
+
+function CityCard({
+  city,
+  tz,
+  now,
+  temp,
+  wind,
+  conditionLabel,
+}: {
+  city: string;
+  tz: string;
+  now: Date;
+  temp?: number;
+  wind?: number;
+  conditionLabel?: string;
+}) {
+  return (
+    <CardContent className="p-5">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-primary/70" />
+            <span className="text-sm font-semibold">{city}</span>
+          </div>
+          {conditionLabel && (
+            <p className="text-xs text-muted-foreground ml-6">{conditionLabel}</p>
+          )}
+          {temp !== undefined && (
+            <div className="flex items-center gap-3 ml-6 mt-1">
+              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Thermometer className="h-3 w-3" /> {temp}°C
+              </span>
+              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Wind className="h-3 w-3" /> {wind} km/h
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="text-right">
+          <p className="text-lg font-mono font-semibold tabular-nums">{formatTime(now, tz)}</p>
+          <p className="text-xs text-muted-foreground">{formatDate(now, tz)}</p>
+        </div>
+      </div>
+    </CardContent>
+  );
+}
 
 export default Index;
