@@ -88,8 +88,8 @@ const Index = () => {
       >
         {/* Header */}
         <div className="text-center space-y-1">
-          <Heart className="mx-auto h-8 w-8 text-primary fill-primary animate-pulse" />
-          <h1 className="text-3xl font-bold tracking-tight">Us</h1>
+          <Heart className="mx-auto h-8 w-8 text-primary fill-primary animate-pulse drop-shadow-[0_0_8px_hsl(330,100%,60%)]" />
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Us</h1>
           <p className="text-sm text-muted-foreground">Paris · Tashkent</p>
         </div>
 
