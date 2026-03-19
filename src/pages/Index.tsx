@@ -175,7 +175,7 @@ const Index = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 80, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
-              className="mb-2 flex gap-3 bg-card/90 backdrop-blur-lg border border-border/50 rounded-2xl px-5 py-3 shadow-lg"
+              className="mb-2 flex gap-3 bg-card/90 backdrop-blur-lg border border-primary/20 rounded-2xl px-5 py-3 shadow-[0_0_20px_-5px_hsl(330,100%,60%,0.2)]"
             >
               {utilities.map((u) => {
                 const isInternal = u.url.startsWith("/");
