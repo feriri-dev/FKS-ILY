@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { differenceInDays } from "date-fns";
-import { Heart, Clock, MapPin, CalendarHeart, ChevronUp, Gift, Tv, ListChecks, Thermometer, Wind } from "lucide-react";
+import { Heart, Clock, MapPin, CalendarHeart, ChevronUp, Tv, ListChecks, Thermometer, Wind } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
