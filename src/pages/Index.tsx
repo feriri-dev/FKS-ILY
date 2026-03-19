@@ -17,7 +17,7 @@ const TASHKENT_TZ = "Asia/Tashkent";
 const utilities = [
   { label: "Teleparty", url: "https://www.teleparty.com/", icon: Tv },
   { label: "Wishlist / Dates", url: "#", icon: Gift },
-  { label: "Shared To-Do", url: "#", icon: ListChecks },
+  { label: "Shared To-Do", url: "/todos", icon: ListChecks },
 ];
 
 function useNow(interval = 1000) {
