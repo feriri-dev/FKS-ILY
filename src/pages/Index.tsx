@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { differenceInDays } from "date-fns";
 import { Heart, Clock, MapPin, CalendarHeart, ChevronUp, Gift, Tv, ListChecks, Thermometer, Wind } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useWeather, getCondition, getConditionLabel } from "@/hooks/use-weather";
@@ -17,7 +18,7 @@ const TASHKENT_TZ = "Asia/Tashkent";
 const utilities = [
   { label: "Teleparty", url: "https://www.teleparty.com/", icon: Tv },
   { label: "Wishlist / Dates", url: "#", icon: Gift },
-  { label: "Shared To-Do", url: "#", icon: ListChecks },
+  { label: "Shared To-Do", url: "/todos", icon: ListChecks },
 ];
 
 function useNow(interval = 1000) {
@@ -176,18 +177,23 @@ const Index = () => {
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
               className="mb-2 flex gap-3 bg-card/90 backdrop-blur-lg border border-border/50 rounded-2xl px-5 py-3 shadow-lg"
             >
-              {utilities.map((u) => (
-                <a
-                  key={u.label}
-                  href={u.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-accent/50 transition-colors group"
-                >
-                  <u.icon className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] text-muted-foreground whitespace-nowrap">{u.label}</span>
-                </a>
-              ))}
+              {utilities.map((u) => {
+                const isInternal = u.url.startsWith("/");
+                const Wrapper = isInternal ? Link : "a";
+                const linkProps = isInternal
+                  ? { to: u.url }
+                  : { href: u.url, target: "_blank", rel: "noopener noreferrer" };
+                return (
+                  <Wrapper
+                    key={u.label}
+                    {...(linkProps as any)}
+                    className="flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-accent/50 transition-colors group"
+                  >
+                    <u.icon className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">{u.label}</span>
+                  </Wrapper>
+                );
+              })}
             </motion.div>
           )}
         </AnimatePresence>
