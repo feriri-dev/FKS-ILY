@@ -95,14 +95,14 @@ const Index = () => {
 
         {/* Day counters */}
         <div className="grid grid-cols-2 gap-4">
-          <Card className="bg-card/60 backdrop-blur border-border/50">
+          <Card className="bg-card/70 backdrop-blur border-primary/20 shadow-[0_0_15px_-3px_hsl(330,100%,60%,0.15)]">
             <CardContent className="p-5 text-center space-y-1">
               <CalendarHeart className="mx-auto h-5 w-5 text-primary/70" />
               <p className="text-4xl font-bold font-serif text-foreground">{daysSinceMet}</p>
               <p className="text-xs text-muted-foreground">days since we met</p>
             </CardContent>
           </Card>
-          <Card className="bg-card/60 backdrop-blur border-border/50">
+          <Card className="bg-card/70 backdrop-blur border-primary/20 shadow-[0_0_15px_-3px_hsl(330,100%,60%,0.15)]">
             <CardContent className="p-5 text-center space-y-1">
               <Heart className="mx-auto h-5 w-5 text-primary/70" />
               <p className="text-4xl font-bold font-serif text-foreground">{daysSinceDating}</p>
