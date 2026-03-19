@@ -14,7 +14,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/FKS-ILY">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/todos" element={<TodoList />} />
