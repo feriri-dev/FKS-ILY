@@ -177,18 +177,23 @@ const Index = () => {
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
               className="mb-2 flex gap-3 bg-card/90 backdrop-blur-lg border border-border/50 rounded-2xl px-5 py-3 shadow-lg"
             >
-              {utilities.map((u) => (
-                <a
-                  key={u.label}
-                  href={u.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-accent/50 transition-colors group"
-                >
-                  <u.icon className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] text-muted-foreground whitespace-nowrap">{u.label}</span>
-                </a>
-              ))}
+              {utilities.map((u) => {
+                const isInternal = u.url.startsWith("/");
+                const Wrapper = isInternal ? Link : "a";
+                const linkProps = isInternal
+                  ? { to: u.url }
+                  : { href: u.url, target: "_blank", rel: "noopener noreferrer" };
+                return (
+                  <Wrapper
+                    key={u.label}
+                    {...(linkProps as any)}
+                    className="flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-accent/50 transition-colors group"
+                  >
+                    <u.icon className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">{u.label}</span>
+                  </Wrapper>
+                );
+              })}
             </motion.div>
           )}
         </AnimatePresence>
