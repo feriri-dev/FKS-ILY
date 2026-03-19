@@ -1,8 +1,5 @@
-const API_KEY = "AIzaSyBUQam0WEm3UcMJgnjpcXsp-3iaV14zZBY";
-const SHEET_ID = "1Bemdp9SF_mgk0PUaqlWiaBJXDWqDExOR0ZuvTcoANvs";
-const SHEET_NAME = "Todos";
-
-const BASE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`;
+const APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxgeqI6-2E8zJrkZrlFBtFKPr3Wmc4qF9pSk8bLloFxtAU4kVjkAtnujP_zkCaKQ6Y/exec";
 
 export interface TodoItem {
   id: string;
@@ -11,63 +8,36 @@ export interface TodoItem {
   createdAt: string;
 }
 
-// Read all todos from the sheet
 export async function fetchTodos(): Promise<TodoItem[]> {
-  const url = `${BASE_URL}/values/${SHEET_NAME}!A:D?key=${API_KEY}`;
-  const res = await fetch(url);
+  const res = await fetch(APPS_SCRIPT_URL);
   if (!res.ok) throw new Error("Failed to fetch todos");
-  const data = await res.json();
-  const rows: string[][] = data.values || [];
-  // Skip header row
-  return rows.slice(1).map((row) => ({
-    id: row[0] || "",
-    text: row[1] || "",
-    done: row[2] === "TRUE",
-    createdAt: row[3] || "",
-  }));
+  const rows: string[][] = await res.json();
+  return rows
+    .filter((row) => row[0])
+    .map((row) => ({
+      id: row[0],
+      text: row[1] || "",
+      done: row[2] === "TRUE",
+      createdAt: row[3] || "",
+    }));
 }
 
-// Append a new todo
-export async function addTodo(text: string): Promise<void> {
-  const url = `${BASE_URL}/values/${SHEET_NAME}!A:D:append?valueInputOption=RAW&key=${API_KEY}`;
-  const id = crypto.randomUUID();
-  const res = await fetch(url, {
+async function post(body: Record<string, unknown>): Promise<void> {
+  const res = await fetch(APPS_SCRIPT_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      values: [[id, text, "FALSE", new Date().toISOString()]],
-    }),
+    body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error("Failed to add todo");
+  if (!res.ok) throw new Error("Request failed");
 }
 
-// Toggle a todo's done state — find row index and update
+export async function addTodo(text: string): Promise<void> {
+  await post({ action: "add", id: crypto.randomUUID(), text, createdAt: new Date().toISOString() });
+}
+
 export async function toggleTodo(id: string, done: boolean): Promise<void> {
-  // First find the row index
-  const todos = await fetchTodos();
-  const idx = todos.findIndex((t) => t.id === id);
-  if (idx === -1) throw new Error("Todo not found");
-  const rowNum = idx + 2; // +1 header, +1 zero-based
-  const url = `${BASE_URL}/values/${SHEET_NAME}!C${rowNum}?valueInputOption=RAW&key=${API_KEY}`;
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ values: [[done ? "TRUE" : "FALSE"]] }),
-  });
-  if (!res.ok) throw new Error("Failed to toggle todo");
+  await post({ action: "toggle", id, done });
 }
 
-// Delete a todo by clearing the row (or we can use batchUpdate)
 export async function deleteTodo(id: string): Promise<void> {
-  const todos = await fetchTodos();
-  const idx = todos.findIndex((t) => t.id === id);
-  if (idx === -1) throw new Error("Todo not found");
-  const rowNum = idx + 2;
-  const url = `${BASE_URL}/values/${SHEET_NAME}!A${rowNum}:D${rowNum}?valueInputOption=RAW&key=${API_KEY}`;
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ values: [["", "", "", ""]] }),
-  });
-  if (!res.ok) throw new Error("Failed to delete todo");
+  await post({ action: "delete", id });
 }
