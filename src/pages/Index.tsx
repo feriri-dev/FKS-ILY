@@ -126,7 +126,7 @@ const Index = () => {
               />
             </WeatherScene>
           ) : (
-            <Card className="bg-card/60 backdrop-blur border-border/50">
+            <Card className="bg-card/70 backdrop-blur border-primary/20 shadow-[0_0_15px_-3px_hsl(330,100%,60%,0.15)]">
               <CityCard city="Paris" tz={PARIS_TZ} now={now} />
             </Card>
           )}
