@@ -202,7 +202,7 @@ const Index = () => {
           variant="ghost"
           size="icon"
           onClick={() => setToolbarOpen((o) => !o)}
-          className="mb-4 rounded-full bg-card/80 backdrop-blur border border-border/50 shadow-md hover:bg-accent/50 h-11 w-11"
+          className="mb-4 rounded-full bg-card/80 backdrop-blur border border-primary/30 shadow-[0_0_12px_-2px_hsl(330,100%,60%,0.3)] hover:bg-accent/50 h-11 w-11"
         >
           <motion.div animate={{ rotate: toolbarOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
             <ChevronUp className="h-5 w-5 text-primary" />
