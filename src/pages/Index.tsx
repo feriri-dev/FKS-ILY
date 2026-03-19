@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { differenceInDays } from "date-fns";
-import { Heart, Clock, MapPin, CalendarHeart, ChevronUp, Gift, Tv, ListChecks, Thermometer, Wind } from "lucide-react";
+import { Heart, Clock, MapPin, CalendarHeart, ChevronUp, Tv, ListChecks, Thermometer, Wind } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,8 +17,7 @@ const TASHKENT_TZ = "Asia/Tashkent";
 
 const utilities = [
   { label: "Teleparty", url: "https://www.teleparty.com/", icon: Tv },
-  { label: "Wishlist / Dates", url: "#", icon: Gift },
-  { label: "Shared To-Do", url: "/todos", icon: ListChecks },
+  { label: "Wishlist / Dates", url: "/todos", icon: ListChecks },
 ];
 
 function useNow(interval = 1000) {
@@ -76,8 +75,9 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10 relative overflow-hidden">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-accent/30 blur-3xl" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/10 blur-3xl animate-neon-pulse" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-accent/20 blur-3xl animate-neon-pulse" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[100px]" />
       </div>
 
       <motion.div
@@ -88,21 +88,21 @@ const Index = () => {
       >
         {/* Header */}
         <div className="text-center space-y-1">
-          <Heart className="mx-auto h-8 w-8 text-primary fill-primary animate-pulse" />
-          <h1 className="text-3xl font-bold tracking-tight">Us</h1>
+          <Heart className="mx-auto h-8 w-8 text-primary fill-primary animate-pulse drop-shadow-[0_0_8px_hsl(330,100%,60%)]" />
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Us</h1>
           <p className="text-sm text-muted-foreground">Paris · Tashkent</p>
         </div>
 
         {/* Day counters */}
         <div className="grid grid-cols-2 gap-4">
-          <Card className="bg-card/60 backdrop-blur border-border/50">
+          <Card className="bg-card/70 backdrop-blur border-primary/20 shadow-[0_0_15px_-3px_hsl(330,100%,60%,0.15)]">
             <CardContent className="p-5 text-center space-y-1">
               <CalendarHeart className="mx-auto h-5 w-5 text-primary/70" />
               <p className="text-4xl font-bold font-serif text-foreground">{daysSinceMet}</p>
               <p className="text-xs text-muted-foreground">days since we met</p>
             </CardContent>
           </Card>
-          <Card className="bg-card/60 backdrop-blur border-border/50">
+          <Card className="bg-card/70 backdrop-blur border-primary/20 shadow-[0_0_15px_-3px_hsl(330,100%,60%,0.15)]">
             <CardContent className="p-5 text-center space-y-1">
               <Heart className="mx-auto h-5 w-5 text-primary/70" />
               <p className="text-4xl font-bold font-serif text-foreground">{daysSinceDating}</p>
@@ -126,7 +126,7 @@ const Index = () => {
               />
             </WeatherScene>
           ) : (
-            <Card className="bg-card/60 backdrop-blur border-border/50">
+            <Card className="bg-card/70 backdrop-blur border-primary/20 shadow-[0_0_15px_-3px_hsl(330,100%,60%,0.15)]">
               <CityCard city="Paris" tz={PARIS_TZ} now={now} />
             </Card>
           )}
@@ -144,14 +144,14 @@ const Index = () => {
               />
             </WeatherScene>
           ) : (
-            <Card className="bg-card/60 backdrop-blur border-border/50">
+            <Card className="bg-card/70 backdrop-blur border-primary/20 shadow-[0_0_15px_-3px_hsl(330,100%,60%,0.15)]">
               <CityCard city="Tashkent" tz={TASHKENT_TZ} now={now} />
             </Card>
           )}
         </div>
 
         {/* Countdown */}
-        <Card className="bg-card/60 backdrop-blur border-border/50">
+        <Card className="bg-card/70 backdrop-blur border-primary/20 shadow-[0_0_15px_-3px_hsl(330,100%,60%,0.15)]">
           <CardContent className="p-5 text-center space-y-3">
             <div className="flex items-center justify-center gap-2">
               <Clock className="h-4 w-4 text-primary/70" />
@@ -175,7 +175,7 @@ const Index = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 80, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
-              className="mb-2 flex gap-3 bg-card/90 backdrop-blur-lg border border-border/50 rounded-2xl px-5 py-3 shadow-lg"
+              className="mb-2 flex gap-3 bg-card/90 backdrop-blur-lg border border-primary/20 rounded-2xl px-5 py-3 shadow-[0_0_20px_-5px_hsl(330,100%,60%,0.2)]"
             >
               {utilities.map((u) => {
                 const isInternal = u.url.startsWith("/");
@@ -202,7 +202,7 @@ const Index = () => {
           variant="ghost"
           size="icon"
           onClick={() => setToolbarOpen((o) => !o)}
-          className="mb-4 rounded-full bg-card/80 backdrop-blur border border-border/50 shadow-md hover:bg-accent/50 h-11 w-11"
+          className="mb-4 rounded-full bg-card/80 backdrop-blur border border-primary/30 shadow-[0_0_12px_-2px_hsl(330,100%,60%,0.3)] hover:bg-accent/50 h-11 w-11"
         >
           <motion.div animate={{ rotate: toolbarOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
             <ChevronUp className="h-5 w-5 text-primary" />
