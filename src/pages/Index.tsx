@@ -10,7 +10,7 @@ import { WeatherScene } from "@/components/WeatherScene";
 
 const MET_DATE = new Date(2024, 2, 19);
 const DATING_DATE = new Date(2025, 8, 2);
-const NEXT_MEETING: Date | null = null;
+const NEXT_MEETING: new Date(2026, 5, 8);
 
 const PARIS_TZ = "Europe/Paris";
 const TASHKENT_TZ = "Asia/Tashkent";
